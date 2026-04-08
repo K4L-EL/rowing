@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { GlassCard } from "@/components/glass-card";
+import { ClayCard } from "@/components/clay-card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AiAssistButton } from "@/components/welfare/ai-assist-button";
 import {
   Dialog,
   DialogContent,
@@ -201,9 +202,9 @@ export function WelfareWizard() {
 
   return (
     <>
-      <GlassCard className="p-6 md:p-8">
+      <ClayCard className="p-6 md:p-8">
         <div className="mb-6">
-          <p className="text-sm font-medium text-sky-700">
+          <p className="text-sm font-medium text-primary">
             Step {step + 1} of {totalSteps}
           </p>
           <h2 className="mt-1 text-xl font-semibold tracking-tight text-foreground">
@@ -252,7 +253,7 @@ export function WelfareWizard() {
               <Input id="reporterPhone" {...register("reporterPhone")} className="mt-1" />
             </div>
             <div className="border-t border-white/40 pt-4">
-              <p className="mb-2 text-sm font-medium text-sky-800">Who is the concern about? (required)</p>
+              <p className="mb-2 text-sm font-medium text-primary">Who is the concern about? (required)</p>
               <div className="grid gap-2 md:grid-cols-2">
                 <div>
                   <Label htmlFor="subjectName">Name</Label>
@@ -283,7 +284,14 @@ export function WelfareWizard() {
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="factual">What exactly happened? (factual description)</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="factual">What exactly happened? (factual description)</Label>
+                <AiAssistButton
+                  fieldContext="factual description of what happened"
+                  getText={() => getValues("factualDescription")}
+                  onSuggestion={(t) => setValue("factualDescription", t)}
+                />
+              </div>
               <Textarea id="factual" rows={6} {...register("factualDescription")} className="mt-1" />
               {formState.errors.factualDescription && (
                 <p className="mt-1 text-sm text-destructive">
@@ -372,7 +380,14 @@ export function WelfareWizard() {
         {step === 4 && (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="impact">What impact has this had?</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="impact">What impact has this had?</Label>
+                <AiAssistButton
+                  fieldContext="impact and risk assessment"
+                  getText={() => getValues("impactDescription")}
+                  onSuggestion={(t) => setValue("impactDescription", t)}
+                />
+              </div>
               <Textarea id="impact" rows={4} {...register("impactDescription")} className="mt-1" />
               {formState.errors.impactDescription && (
                 <p className="mt-1 text-sm text-destructive">
@@ -493,10 +508,10 @@ export function WelfareWizard() {
             )}
           </div>
         </div>
-      </GlassCard>
+      </ClayCard>
 
       <Dialog open={emergencyOpen} onOpenChange={setEmergencyOpen}>
-        <DialogContent className="glass-card border-white/60 bg-white/80 sm:max-w-md">
+        <DialogContent className="clay rounded-3xl border-0 bg-white sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-destructive">Immediate risk</DialogTitle>
             <DialogDescription>
@@ -507,7 +522,7 @@ export function WelfareWizard() {
             {EMERGENCY_CONTACTS.map((c) => (
               <li key={c.label}>
                 <span className="font-semibold">{c.label}</span>:{" "}
-                <a className="text-sky-700 underline" href={`tel:${c.phone.replace(/\s/g, "")}`}>
+                <a className="text-primary underline" href={`tel:${c.phone.replace(/\s/g, "")}`}>
                   {c.phone}
                 </a>
                 {c.detail ? <span className="block text-muted-foreground">{c.detail}</span> : null}

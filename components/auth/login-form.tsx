@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { GlassCard } from "@/components/glass-card";
+import { ClayCard } from "@/components/clay-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,8 +35,8 @@ export function LoginForm() {
   }
 
   return (
-    <GlassCard className="p-8">
-      <h1 className="text-2xl font-semibold tracking-tight text-sky-950">Sign in</h1>
+    <ClayCard className="p-8">
+      <h1 className="text-2xl font-semibold tracking-tight text-foreground">Sign in</h1>
       <p className="mt-1 text-sm text-muted-foreground">Access your member portal.</p>
       <form onSubmit={(e) => void onSubmit(e)} className="mt-6 space-y-4">
         <div>
@@ -48,7 +48,7 @@ export function LoginForm() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1"
+            className="clay-pressed mt-1 rounded-xl border-0 bg-clay-blue-pale"
           />
         </div>
         <div>
@@ -60,20 +60,20 @@ export function LoginForm() {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1"
+            className="clay-pressed mt-1 rounded-xl border-0 bg-clay-blue-pale"
           />
         </div>
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        <Button type="submit" className="w-full" disabled={pending}>
+        <Button type="submit" className="clay-button w-full rounded-2xl" disabled={pending}>
           {pending ? "Signing in…" : "Sign in"}
         </Button>
       </form>
       <p className="mt-4 text-center text-sm text-muted-foreground">
         No account?{" "}
-        <Link href="/register" className="font-medium text-sky-800 underline">
+        <Link href="/register" className="font-medium text-primary underline">
           Register
         </Link>
       </p>
-    </GlassCard>
+    </ClayCard>
   );
 }

@@ -1,4 +1,4 @@
-import type { ReportStatus } from "@prisma/client";
+export type ReportStatus = "SUBMITTED" | "REVIEWED" | "ASSIGNED" | "UNDER_DISCUSSION" | "RESOLVED";
 
 const LABELS: Record<ReportStatus, string> = {
   SUBMITTED: "Submitted",
@@ -8,6 +8,6 @@ const LABELS: Record<ReportStatus, string> = {
   RESOLVED: "Resolved",
 };
 
-export function reportStatusLabel(status: ReportStatus): string {
-  return LABELS[status] ?? status;
+export function reportStatusLabel(status: string): string {
+  return LABELS[status as ReportStatus] ?? status;
 }

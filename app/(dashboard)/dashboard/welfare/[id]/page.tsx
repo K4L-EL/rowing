@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
-import { GlassCard } from "@/components/glass-card";
+import { ClayCard } from "@/components/clay-card";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { prisma } from "@/lib/prisma";
+import { cn } from "@/lib/utils";
+import { parsePayload } from "@/lib/parse-payload";
 import { reportStatusLabel } from "@/lib/welfare-status";
+import { AiSummary } from "@/components/welfare/ai-summary";
 import { welfarePayloadSchema } from "@/lib/validations/welfare";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -23,26 +25,26 @@ export default async function WelfareDetailPage({ params }: PageProps) {
   });
   if (!report) notFound();
 
-  const parsed = welfarePayloadSchema.safeParse(report.payload);
+  const parsed = welfarePayloadSchema.safeParse(parsePayload(report.payload));
   const payload = parsed.success ? parsed.data : null;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex flex-wrap items-center gap-3">
-        <Link href="/dashboard/welfare" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+        <Link href="/dashboard/welfare" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "clay-button rounded-xl")}>
           ← All cases
         </Link>
       </div>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-sky-950">Case detail</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Case detail</h1>
           <p className="font-mono text-xs text-muted-foreground">{report.id}</p>
         </div>
-        <Badge className="bg-sky-500/20 text-sky-950">{reportStatusLabel(report.status)}</Badge>
+        <Badge className="bg-clay-blue-light text-primary">{reportStatusLabel(report.status)}</Badge>
       </div>
 
-      <GlassCard className="space-y-4 p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-sky-800">Summary</h2>
+      <ClayCard className="space-y-4 p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Summary</h2>
         {payload ? (
           <dl className="grid gap-3 text-sm">
             <div>
@@ -61,12 +63,12 @@ export default async function WelfareDetailPage({ params }: PageProps) {
         ) : (
           <p className="text-sm text-destructive">Could not read stored report data.</p>
         )}
-        <Separator className="bg-white/40" />
+        <Separator className="bg-border" />
         <div className="flex flex-wrap gap-2">
           <a
             href={`/api/welfare-reports/${report.id}/pdf`}
             download
-            className={cn(buttonVariants({ variant: "secondary" }), "inline-flex")}
+            className={cn(buttonVariants({ variant: "secondary" }), "clay-button inline-flex rounded-2xl")}
           >
             Download PDF
           </a>
@@ -74,13 +76,15 @@ export default async function WelfareDetailPage({ params }: PageProps) {
             A copy was also sent to your email on file when you submitted, if email is configured.
           </p>
         </div>
-      </GlassCard>
+      </ClayCard>
 
-      <GlassCard className="p-6">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-sky-800">Progress</h2>
+      <AiSummary reportId={report.id} />
+
+      <ClayCard className="p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Progress</h2>
         <ul className="mt-4 space-y-3">
           {report.events.map((ev) => (
-            <li key={ev.id} className="border-l-2 border-sky-400/60 pl-3 text-sm">
+            <li key={ev.id} className="border-l-2 border-clay-blue pl-3 text-sm">
               <p className="font-medium">
                 {ev.status ? reportStatusLabel(ev.status) : "Update"}
                 <span className="ml-2 font-normal text-muted-foreground">
@@ -91,7 +95,7 @@ export default async function WelfareDetailPage({ params }: PageProps) {
             </li>
           ))}
         </ul>
-      </GlassCard>
+      </ClayCard>
     </div>
   );
 }

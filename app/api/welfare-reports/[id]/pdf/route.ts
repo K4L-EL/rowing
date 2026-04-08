@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { renderWelfareReportPdf } from "@/lib/factories/pdf-service";
 import { prisma } from "@/lib/prisma";
+import { parsePayload } from "@/lib/parse-payload";
 import { welfarePayloadSchema } from "@/lib/validations/welfare";
 import { NextResponse } from "next/server";
 
@@ -18,7 +19,7 @@ export async function GET(_request: Request, { params }: RouteParams) {
   if (!report) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
-  const parsed = welfarePayloadSchema.safeParse(report.payload);
+  const parsed = welfarePayloadSchema.safeParse(parsePayload(report.payload));
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid stored payload" }, { status: 500 });
   }

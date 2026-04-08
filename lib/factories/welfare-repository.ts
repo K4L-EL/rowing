@@ -1,5 +1,6 @@
-import type { PrismaClient, ReportStatus, WelfareReport } from "@prisma/client";
+import type { PrismaClient, WelfareReport } from "@prisma/client";
 import type { WelfarePayload } from "@/lib/validations/welfare";
+import type { ReportStatus } from "@/lib/welfare-status";
 
 export function createWelfareRepository(db: PrismaClient) {
   return {
@@ -12,7 +13,7 @@ export function createWelfareRepository(db: PrismaClient) {
         data: {
           userId: input.userId,
           anonymousReporter: input.anonymousReporter,
-          payload: input.payload as object,
+          payload: JSON.stringify(input.payload),
           status: "SUBMITTED",
           events: {
             create: {

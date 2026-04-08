@@ -46,71 +46,79 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-clay-blue: #0ea5e9;
+  --color-clay-blue-light: #bae6fd;
+  --color-clay-blue-pale: #e0f2fe;
+  --color-clay-white: #ffffff;
+  --color-clay-ice: #f0f9ff;
+  --color-clay-mint: #a7f3d0;
+  --color-clay-lavender: #c4b5fd;
+  --color-clay-sky: #7dd3fc;
 }
 
-/* Bright, minimalist glass-friendly theme (light-first) */
 :root {
-  --background: oklch(0.99 0.02 210);
-  --foreground: oklch(0.22 0.04 250);
-  --card: oklch(1 0.01 210 / 0.55);
-  --card-foreground: oklch(0.22 0.04 250);
-  --popover: oklch(1 0.02 210 / 0.95);
-  --popover-foreground: oklch(0.22 0.04 250);
-  --primary: oklch(0.72 0.14 210);
-  --primary-foreground: oklch(0.99 0.01 210);
-  --secondary: oklch(0.96 0.03 200);
-  --secondary-foreground: oklch(0.28 0.06 250);
-  --muted: oklch(0.96 0.02 210);
-  --muted-foreground: oklch(0.45 0.03 250);
-  --accent: oklch(0.93 0.06 200);
-  --accent-foreground: oklch(0.25 0.08 250);
-  --destructive: oklch(0.58 0.22 25);
-  --border: oklch(1 0 0 / 0.65);
-  --input: oklch(1 0 0 / 0.5);
-  --ring: oklch(0.72 0.14 210);
-  --chart-1: oklch(0.72 0.14 210);
-  --chart-2: oklch(0.65 0.12 180);
-  --chart-3: oklch(0.78 0.1 160);
-  --chart-4: oklch(0.55 0.08 250);
-  --chart-5: oklch(0.6 0.15 30);
-  --radius: 0.75rem;
-  --sidebar: oklch(0.98 0.02 210 / 0.6);
-  --sidebar-foreground: oklch(0.22 0.04 250);
-  --sidebar-primary: oklch(0.72 0.14 210);
-  --sidebar-primary-foreground: oklch(0.99 0.01 210);
-  --sidebar-accent: oklch(0.94 0.04 200);
-  --sidebar-accent-foreground: oklch(0.25 0.08 250);
-  --sidebar-border: oklch(1 0 0 / 0.5);
-  --sidebar-ring: oklch(0.72 0.14 210);
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0ea5e9;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f9ff;
+  --secondary-foreground: #0f172a;
+  --muted: #f0f9ff;
+  --muted-foreground: #64748b;
+  --accent: #bae6fd;
+  --accent-foreground: #0c4a6e;
+  --destructive: #ef4444;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #0ea5e9;
+  --chart-1: #0ea5e9;
+  --chart-2: #7dd3fc;
+  --chart-3: #a7f3d0;
+  --chart-4: #c4b5fd;
+  --chart-5: #fbbf24;
+  --radius: 1rem;
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #0ea5e9;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f9ff;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #0ea5e9;
 }
 
 .dark {
-  --background: oklch(0.18 0.03 250);
-  --foreground: oklch(0.97 0.02 210);
-  --card: oklch(0.22 0.04 250 / 0.5);
-  --card-foreground: oklch(0.97 0.02 210);
-  --popover: oklch(0.2 0.04 250);
-  --popover-foreground: oklch(0.97 0.02 210);
-  --primary: oklch(0.75 0.14 210);
-  --primary-foreground: oklch(0.15 0.03 250);
-  --secondary: oklch(0.28 0.04 250);
-  --secondary-foreground: oklch(0.97 0.02 210);
-  --muted: oklch(0.28 0.04 250);
-  --muted-foreground: oklch(0.72 0.03 210);
-  --accent: oklch(0.32 0.06 220);
-  --accent-foreground: oklch(0.97 0.02 210);
-  --destructive: oklch(0.65 0.2 25);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.75 0.14 210);
-  --sidebar: oklch(0.2 0.04 250 / 0.7);
-  --sidebar-foreground: oklch(0.97 0.02 210);
-  --sidebar-primary: oklch(0.75 0.14 210);
-  --sidebar-primary-foreground: oklch(0.15 0.03 250);
-  --sidebar-accent: oklch(0.28 0.04 250);
-  --sidebar-accent-foreground: oklch(0.97 0.02 210);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.75 0.14 210);
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #1e293b;
+  --popover-foreground: #f1f5f9;
+  --primary: #38bdf8;
+  --primary-foreground: #0f172a;
+  --secondary: #1e293b;
+  --secondary-foreground: #f1f5f9;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #0284c7;
+  --accent-foreground: #f1f5f9;
+  --destructive: #f87171;
+  --border: #334155;
+  --input: #334155;
+  --ring: #38bdf8;
+  --sidebar: #1e293b;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #38bdf8;
+  --sidebar-primary-foreground: #0f172a;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f1f5f9;
+  --sidebar-border: #334155;
+  --sidebar-ring: #38bdf8;
 }
 
 @layer base {
@@ -122,10 +130,52 @@
   }
   body {
     @apply min-h-screen bg-background text-foreground antialiased;
-    background-image:
-      radial-gradient(ellipse 120% 80% at 20% -10%, oklch(0.92 0.08 210 / 0.45), transparent 50%),
-      radial-gradient(ellipse 90% 60% at 100% 10%, oklch(0.9 0.1 180 / 0.35), transparent 45%),
-      radial-gradient(ellipse 70% 50% at 50% 100%, oklch(0.94 0.06 200 / 0.4), transparent 50%);
-    background-attachment: fixed;
+  }
+}
+
+@layer utilities {
+  .clay {
+    border-radius: 24px;
+    box-shadow:
+      8px 8px 20px rgba(0, 0, 0, 0.06),
+      -4px -4px 12px rgba(255, 255, 255, 0.9),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.7),
+      inset -1px -1px 3px rgba(0, 0, 0, 0.03);
+  }
+  .clay-sm {
+    border-radius: 16px;
+    box-shadow:
+      5px 5px 12px rgba(0, 0, 0, 0.05),
+      -3px -3px 8px rgba(255, 255, 255, 0.8),
+      inset 1px 1px 3px rgba(255, 255, 255, 0.6),
+      inset -1px -1px 2px rgba(0, 0, 0, 0.02);
+  }
+  .clay-pressed {
+    border-radius: 20px;
+    box-shadow:
+      inset 4px 4px 10px rgba(0, 0, 0, 0.06),
+      inset -2px -2px 6px rgba(255, 255, 255, 0.6),
+      2px 2px 6px rgba(0, 0, 0, 0.03);
+  }
+  .clay-button {
+    border-radius: 16px;
+    box-shadow:
+      4px 4px 10px rgba(0, 0, 0, 0.08),
+      -2px -2px 6px rgba(255, 255, 255, 0.8),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.5);
+    transition: all 0.15s ease;
+  }
+  .clay-button:hover {
+    box-shadow:
+      2px 2px 6px rgba(0, 0, 0, 0.08),
+      -1px -1px 4px rgba(255, 255, 255, 0.8),
+      inset 2px 2px 4px rgba(0, 0, 0, 0.04);
+    transform: translateY(1px);
+  }
+  .clay-button:active {
+    box-shadow:
+      inset 3px 3px 8px rgba(0, 0, 0, 0.08),
+      inset -1px -1px 4px rgba(255, 255, 255, 0.5);
+    transform: translateY(2px);
   }
 }
