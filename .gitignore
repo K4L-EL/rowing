@@ -40,3 +40,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# markdown docs (keep out of repo)
+*.md
+
+# cursor IDE
+.cursor/
+
+# sqlite dev db
+prisma/dev.db
+prisma/dev.db-journal
