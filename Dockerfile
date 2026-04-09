@@ -1,5 +1,6 @@
 # ── Stage 1: Dependencies ──
 FROM node:20-alpine AS deps
+RUN apk add --no-cache openssl
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts
@@ -8,6 +9,7 @@ RUN npx prisma generate
 
 # ── Stage 2: Build ──
 FROM node:20-alpine AS build
+RUN apk add --no-cache openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -16,6 +18,7 @@ RUN npm run build
 
 # ── Stage 3: Runtime ──
 FROM node:20-alpine AS runtime
+RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
