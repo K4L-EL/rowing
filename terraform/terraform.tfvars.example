@@ -1,0 +1,25 @@
+project_name = "rowsafe"
+environment  = "production"
+location     = "uksouth"
+
+# Database
+db_admin_username = "rowsafeadmin"
+db_admin_password = "CHANGE_ME_strong_password_here"
+db_sku            = "B_Standard_B1ms"
+db_storage_mb     = 32768
+
+# Auth.js secret — generate with: openssl rand -base64 32
+auth_secret = "CHANGE_ME"
+
+# App Service Plan
+app_sku = "B1"
+
+# Optional — AI features
+# openai_api_key = "sk-..."
+
+# Optional — email
+# resend_api_key = "re_..."
+# email_from     = "Welfare <noreply@yourdomain.com>"
+
+# Optional — custom domain
+# custom_domain = "rowsafe.yourdomain.com"

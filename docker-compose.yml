@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: rowsafe
+      POSTGRES_USER: rowsafe
+      POSTGRES_PASSWORD: rowsafe_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rowsafe"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql://rowsafe:rowsafe_dev@postgres:5432/rowsafe"
+      AUTH_SECRET: "docker-dev-secret-not-for-production"
+      AUTH_URL: "http://localhost:3000"
+      AUTH_TRUST_HOST: "true"
+
+volumes:
+  postgres_data:
