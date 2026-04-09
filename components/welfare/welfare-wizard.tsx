@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { AiAssistButton } from "@/components/welfare/ai-assist-button";
 import {
   Dialog,
   DialogContent,
@@ -284,14 +283,7 @@ export function WelfareWizard() {
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="factual">What exactly happened? (factual description)</Label>
-                <AiAssistButton
-                  fieldContext="factual description of what happened"
-                  getText={() => getValues("factualDescription")}
-                  onSuggestion={(t) => setValue("factualDescription", t)}
-                />
-              </div>
+              <Label htmlFor="factual">What exactly happened? (factual description)</Label>
               <Textarea id="factual" rows={6} {...register("factualDescription")} className="mt-1" />
               {formState.errors.factualDescription && (
                 <p className="mt-1 text-sm text-destructive">
@@ -380,14 +372,7 @@ export function WelfareWizard() {
         {step === 4 && (
           <div className="space-y-4">
             <div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="impact">What impact has this had?</Label>
-                <AiAssistButton
-                  fieldContext="impact and risk assessment"
-                  getText={() => getValues("impactDescription")}
-                  onSuggestion={(t) => setValue("impactDescription", t)}
-                />
-              </div>
+              <Label htmlFor="impact">What impact has this had?</Label>
               <Textarea id="impact" rows={4} {...register("impactDescription")} className="mt-1" />
               {formState.errors.impactDescription && (
                 <p className="mt-1 text-sm text-destructive">
