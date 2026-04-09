@@ -3,17 +3,34 @@ import type { WelfarePayload } from "@/lib/validations/welfare";
 
 export type AiServiceConfig = {
   apiKey?: string;
+  azureEndpoint?: string;
+  azureDeployment?: string;
 };
 
+function createClient(config: AiServiceConfig): OpenAI | null {
+  if (config.azureEndpoint && config.apiKey) {
+    return new OpenAI({
+      apiKey: config.apiKey,
+      baseURL: `${config.azureEndpoint}/openai/deployments/${config.azureDeployment ?? "gpt-4o-mini"}`,
+      defaultQuery: { "api-version": "2024-08-01-preview" },
+      defaultHeaders: { "api-key": config.apiKey },
+    });
+  }
+  if (config.apiKey) {
+    return new OpenAI({ apiKey: config.apiKey });
+  }
+  return null;
+}
+
 export function createAiService(config: AiServiceConfig) {
-  const client = config.apiKey ? new OpenAI({ apiKey: config.apiKey }) : null;
+  const client = createClient(config);
 
   return {
     async generateReportSummary(payload: WelfarePayload): Promise<string> {
       if (!client) return fallbackSummary(payload);
       try {
         const res = await client.chat.completions.create({
-          model: "gpt-4o-mini",
+          model: config.azureDeployment ?? "gpt-4o-mini",
           temperature: 0.3,
           max_tokens: 600,
           messages: [
@@ -38,10 +55,10 @@ export function createAiService(config: AiServiceConfig) {
       fieldContext: string,
       userDraft: string,
     ): Promise<string> {
-      if (!client) return "AI assistance is not configured. Please set OPENAI_API_KEY.";
+      if (!client) return userDraft;
       try {
         const res = await client.chat.completions.create({
-          model: "gpt-4o-mini",
+          model: config.azureDeployment ?? "gpt-4o-mini",
           temperature: 0.4,
           max_tokens: 300,
           messages: [
@@ -58,7 +75,7 @@ export function createAiService(config: AiServiceConfig) {
         return res.choices[0]?.message?.content?.trim() ?? userDraft;
       } catch (e) {
         console.error("[ai] assist failed", e);
-        return "Could not generate suggestion. Please try again.";
+        return userDraft;
       }
     },
   };
@@ -66,13 +83,13 @@ export function createAiService(config: AiServiceConfig) {
 
 function fallbackSummary(p: WelfarePayload): string {
   return [
-    `**Concern about:** ${p.subjectName} (age ${p.subjectAge}, ${p.subjectRole})`,
-    `**Type:** ${p.concernType.replace(/_/g, " ")}`,
-    `**Description:** ${p.factualDescription}`,
-    `**When:** ${p.whenDescription}`,
-    `**Where:** ${p.whereDescription}`,
-    `**Immediate risk:** ${p.immediateRisk ? "Yes" : "No"}`,
-    `**Reporter anonymous:** ${p.anonymousReporter ? "Yes" : "No"}`,
+    `• Concern about: ${p.subjectName} (age ${p.subjectAge}, ${p.subjectRole})`,
+    `• Type: ${p.concernType.replace(/_/g, " ")}`,
+    `• Description: ${p.factualDescription}`,
+    `• When: ${p.whenDescription}`,
+    `• Where: ${p.whereDescription}`,
+    `• Immediate risk: ${p.immediateRisk ? "Yes" : "No"}`,
+    `• Reporter anonymous: ${p.anonymousReporter ? "Yes" : "No"}`,
   ].join("\n");
 }
 

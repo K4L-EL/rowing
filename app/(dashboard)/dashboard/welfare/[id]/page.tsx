@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
 import { parsePayload } from "@/lib/parse-payload";
 import { reportStatusLabel } from "@/lib/welfare-status";
+import { AiSummary } from "@/components/welfare/ai-summary";
 import { welfarePayloadSchema } from "@/lib/validations/welfare";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -76,6 +77,8 @@ export default async function WelfareDetailPage({ params }: PageProps) {
           </p>
         </div>
       </ClayCard>
+
+      <AiSummary reportId={report.id} />
 
       <ClayCard className="p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">Progress</h2>
