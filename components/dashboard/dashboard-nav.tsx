@@ -100,10 +100,8 @@ export function DashboardNav() {
       {/* Mobile header bar + sheet */}
       <div className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-3 border-b border-border bg-white/80 px-4 backdrop-blur-sm md:hidden">
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <button className="clay-sm inline-flex size-9 items-center justify-center bg-white">
-              {open ? <X className="size-5" /> : <Menu className="size-5" />}
-            </button>
+          <SheetTrigger className="clay-sm inline-flex size-9 items-center justify-center bg-white">
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </SheetTrigger>
           <SheetContent side="left" className="w-64 border-0 bg-white/95 p-0 backdrop-blur-md">
             <NavContent onNavigate={() => setOpen(false)} />
