@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { signOut } from "next-auth/react";
 import {
   Heart,
@@ -9,7 +10,10 @@ import {
   PartyPopper,
   PoundSterling,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ClayCard } from "@/components/clay-card";
 import { cn } from "@/lib/utils";
 
@@ -20,13 +24,14 @@ const links = [
   { href: "/dashboard/events", label: "Events", icon: PartyPopper, color: "bg-clay-lavender" },
 ] as const;
 
-export function DashboardNav() {
+function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 flex h-screen w-60 shrink-0 flex-col gap-4 bg-white/60 p-4 md:w-64">
+    <div className="flex h-full flex-col gap-4 p-4">
       <Link
         href="/dashboard/welfare"
+        onClick={onNavigate}
         className="flex items-center gap-2 px-2 py-1"
       >
         <span className="clay-sm inline-flex size-9 items-center justify-center bg-primary text-lg font-bold text-primary-foreground">
@@ -43,12 +48,12 @@ export function DashboardNav() {
         </p>
         <nav className="flex flex-col gap-1">
           {links.map(({ href, label, icon: Icon, color }) => {
-            const active =
-              pathname === href || pathname.startsWith(href + "/");
+            const active = pathname === href || pathname.startsWith(href + "/");
             return (
               <Link
                 key={href}
                 href={href}
+                onClick={onNavigate}
                 className={cn(
                   "clay-sm flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-all",
                   active
@@ -78,6 +83,39 @@ export function DashboardNav() {
         <LogOut className="size-4" />
         Sign out
       </button>
-    </aside>
+    </div>
+  );
+}
+
+export function DashboardNav() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 bg-white/60 md:flex md:flex-col">
+        <NavContent />
+      </aside>
+
+      {/* Mobile header bar + sheet */}
+      <div className="fixed inset-x-0 top-0 z-50 flex h-14 items-center gap-3 border-b border-border bg-white/80 px-4 backdrop-blur-sm md:hidden">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>
+            <button className="clay-sm inline-flex size-9 items-center justify-center bg-white">
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 border-0 bg-white/95 p-0 backdrop-blur-md">
+            <NavContent onNavigate={() => setOpen(false)} />
+          </SheetContent>
+        </Sheet>
+        <Link href="/dashboard/welfare" className="flex items-center gap-2">
+          <span className="clay-sm inline-flex size-7 items-center justify-center bg-primary text-sm font-bold text-primary-foreground">
+            R
+          </span>
+          <span className="font-semibold text-foreground">Portal</span>
+        </Link>
+      </div>
+    </>
   );
 }
