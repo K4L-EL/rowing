@@ -1,14 +1,15 @@
-import { ClayCard } from "@/components/clay-card";
+import { KitShopGrid } from "@/components/kit/kit-shop-grid";
 
-export default function KitStubPage() {
+export default function KitShopPage() {
   return (
-    <div className="mx-auto max-w-xl space-y-4">
-      <h1 className="text-2xl font-semibold tracking-tight text-foreground">Kit orders</h1>
-      <ClayCard className="p-8">
-        <p className="text-muted-foreground">
-          Club kit ordering will be available here in a future update.
+    <div className="mx-auto max-w-6xl space-y-6">
+      <div>
+        <h1 className="text-3xl font-black tracking-tight text-foreground">Kit shop</h1>
+        <p className="mt-1 text-muted-foreground">
+          Official club kit, delivered to your door. Green & pink colourway.
         </p>
-      </ClayCard>
+      </div>
+      <KitShopGrid />
     </div>
   );
 }

@@ -11,8 +11,11 @@ export default async function WelfareListPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
+  const isPrivileged =
+    session.user.role === "ADMIN" || session.user.role === "WELFARE_OFFICER";
+
   const reports = await prisma.welfareReport.findMany({
-    where: { userId: session.user.id },
+    where: isPrivileged ? undefined : { userId: session.user.id },
     orderBy: { createdAt: "desc" },
     select: {
       id: true,

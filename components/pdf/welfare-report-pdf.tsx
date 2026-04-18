@@ -43,7 +43,7 @@ export function WelfareReportPdfDocument({
           ) : null}
           <Row label="Reporter email" value={payload.reporterEmail} />
           <Row label="Subject name" value={payload.subjectName} />
-          <Row label="Subject age" value={payload.subjectAge} />
+          <Row label="Subject squad" value={payload.subjectSquad} />
           <Row label="Subject role" value={payload.subjectRole} />
         </View>
         <View style={styles.section}>

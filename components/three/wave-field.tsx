@@ -6,10 +6,10 @@ import { useRef, useMemo, useCallback, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-const COLS = 140;
-const ROWS = 50;
-const SPACING = 0.22;
-const SPHERE_SIZE = 0.055;
+const COLS = 80;
+const ROWS = 30;
+const SPACING = 0.35;
+const SPHERE_SIZE = 0.085;
 
 function WavePoints() {
   const meshRef = useRef<THREE.InstancedMesh>(null);

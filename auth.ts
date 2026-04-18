@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import type { AppRole } from "@/types/next-auth";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -37,7 +38,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role as "USER" | "WELFARE_OFFICER",
+          role: user.role as AppRole,
         };
       },
     }),
@@ -53,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
-        session.user.role = (token.role as "USER" | "WELFARE_OFFICER") ?? "USER";
+        session.user.role = (token.role as AppRole) ?? "USER";
       }
       return session;
     },

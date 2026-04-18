@@ -13,8 +13,10 @@ export async function GET(_request: Request, { params }: RouteParams) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const { id } = await params;
+  const isPrivileged =
+    session.user.role === "ADMIN" || session.user.role === "WELFARE_OFFICER";
   const report = await prisma.welfareReport.findFirst({
-    where: { id, userId: session.user.id },
+    where: isPrivileged ? { id } : { id, userId: session.user.id },
   });
   if (!report) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

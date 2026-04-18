@@ -2,7 +2,7 @@ import type { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 type ClayCardProps = HTMLAttributes<HTMLDivElement> & {
-  color?: "white" | "blue" | "blueLight" | "bluePale" | "ice" | "mint" | "lavender" | "sky";
+  color?: "white" | "blue" | "blueLight" | "bluePale" | "ice" | "mint" | "lavender" | "sky" | "blush";
   pressed?: boolean;
 };
 
@@ -15,6 +15,7 @@ const colorMap = {
   mint: "bg-clay-mint",
   lavender: "bg-clay-lavender",
   sky: "bg-clay-sky",
+  blush: "bg-clay-blush",
 } as const;
 
 export function ClayCard({

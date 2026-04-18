@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   Heart,
   Package,
@@ -12,20 +12,38 @@ import {
   LogOut,
   Menu,
   X,
+  CalendarDays,
+  Users,
+  ShieldCheck,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ClayCard } from "@/components/clay-card";
 import { cn } from "@/lib/utils";
 
-const links = [
+type LinkItem = {
+  href: string;
+  label: string;
+  icon: typeof Heart;
+  color: string;
+  adminOnly?: boolean;
+};
+
+const links: LinkItem[] = [
   { href: "/dashboard/welfare", label: "Welfare", icon: Heart, color: "bg-clay-blue" },
-  { href: "/dashboard/accounting", label: "Accounting", icon: PoundSterling, color: "bg-clay-mint" },
-  { href: "/dashboard/kit", label: "Kit orders", icon: Package, color: "bg-clay-sky" },
-  { href: "/dashboard/events", label: "Events", icon: PartyPopper, color: "bg-clay-lavender" },
-] as const;
+  { href: "/dashboard/availability", label: "Availability", icon: CalendarDays, color: "bg-clay-mint" },
+  { href: "/dashboard/crew-builder", label: "Crew builder", icon: Users, color: "bg-clay-lavender" },
+  { href: "/dashboard/accounting", label: "Accounting", icon: PoundSterling, color: "bg-clay-sky" },
+  { href: "/dashboard/kit", label: "Kit orders", icon: Package, color: "bg-clay-lavender" },
+  { href: "/dashboard/events", label: "Events", icon: PartyPopper, color: "bg-clay-mint" },
+  { href: "/dashboard/admin", label: "Admin", icon: ShieldCheck, color: "bg-primary", adminOnly: true },
+];
 
 function NavContent({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === "ADMIN";
+
+  const visibleLinks = links.filter((l) => !l.adminOnly || isAdmin);
 
   return (
     <div className="flex h-full flex-col gap-4 p-4">
@@ -47,7 +65,7 @@ function NavContent({ onNavigate }: { onNavigate?: () => void }) {
           Modules
         </p>
         <nav className="flex flex-col gap-1">
-          {links.map(({ href, label, icon: Icon, color }) => {
+          {visibleLinks.map(({ href, label, icon: Icon, color }) => {
             const active = pathname === href || pathname.startsWith(href + "/");
             return (
               <Link

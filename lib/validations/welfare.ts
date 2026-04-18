@@ -8,15 +8,24 @@ export const concernTypeSchema = z.enum([
   "OTHER_WELFARE",
 ]);
 
+export const CONCERN_TYPE_LABELS: Record<z.infer<typeof concernTypeSchema>, string> = {
+  SAFEGUARDING: "Safeguarding (child / vulnerable adult)",
+  BULLYING_HARASSMENT: "Bullying / harassment",
+  POOR_COACHING: "Poor coaching practice",
+  HEALTH_SAFETY: "Health & safety",
+  OTHER_WELFARE: "Other welfare issue",
+};
+
 export const section1Schema = z.object({
   anonymousReporter: z.boolean(),
+  relatedToSelf: z.boolean(),
   reporterName: z.string().optional(),
   reporterRole: z.string().optional(),
   reporterSquad: z.string().optional(),
   reporterPhone: z.string().optional(),
   reporterEmail: z.string().email("Valid email is required"),
   subjectName: z.string().min(1, "Who the concern is about is required"),
-  subjectAge: z.string().min(1, "Age is required (especially if under 18)"),
+  subjectSquad: z.string().min(1, "Their squad is required"),
   subjectRole: z.string().min(1, "Their role in the club is required"),
 });
 
@@ -34,8 +43,8 @@ export const section3Schema = z.object({
 
 export const section4Schema = z.object({
   allegedPersons: z.string().optional(),
-  witnesses: z.string().optional(),
   relationshipsToClub: z.string().optional(),
+  witnesses: z.string().optional(),
 });
 
 export const section5Schema = z.object({
@@ -48,8 +57,15 @@ export const section6Schema = z.object({
   actionsSoFar: z.string().optional(),
 });
 
+export const evidenceFileSchema = z.object({
+  name: z.string(),
+  size: z.number(),
+  type: z.string(),
+});
+
 export const section7Schema = z.object({
   evidenceDescription: z.string().optional(),
+  evidenceFiles: z.array(evidenceFileSchema).optional(),
   previousConcernsSamePerson: z.string().optional(),
 });
 

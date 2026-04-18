@@ -10,6 +10,7 @@ datasource db {
 enum Role {
   USER
   WELFARE_OFFICER
+  ADMIN
 }
 
 enum ReportStatus {
@@ -20,6 +21,12 @@ enum ReportStatus {
   RESOLVED
 }
 
+enum AvailabilityStatus {
+  AVAILABLE
+  UNAVAILABLE
+  MAYBE
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -28,9 +35,11 @@ model User {
   image         String?
   passwordHash  String?
   role          Role      @default(USER)
+  squad         String?
   accounts      Account[]
   sessions      Session[]
   reports       WelfareReport[]
+  availability  AvailabilitySlot[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -75,6 +84,8 @@ model WelfareReport {
   userId            String
   status            ReportStatus @default(SUBMITTED)
   anonymousReporter Boolean      @default(false)
+  assignedToId      String?
+  adminNotes        String?      @db.Text
   payload           Json
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
@@ -95,4 +106,31 @@ model WelfareReportEvent {
   report    WelfareReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
   @@index([reportId])
+}
+
+model AvailabilitySlot {
+  id        String             @id @default(cuid())
+  userId    String
+  date      DateTime
+  status    AvailabilityStatus
+  note      String?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([date])
+}
+
+model CrewSheet {
+  id        String   @id @default(cuid())
+  name      String
+  date      DateTime
+  boatType  String
+  positions Json
+  note      String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
 }

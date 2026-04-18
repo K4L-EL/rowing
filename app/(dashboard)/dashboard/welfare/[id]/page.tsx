@@ -19,8 +19,11 @@ export default async function WelfareDetailPage({ params }: PageProps) {
   if (!session?.user?.id) return null;
   const { id } = await params;
 
+  const isPrivileged =
+    session.user.role === "ADMIN" || session.user.role === "WELFARE_OFFICER";
+
   const report = await prisma.welfareReport.findFirst({
-    where: { id, userId: session.user.id },
+    where: isPrivileged ? { id } : { id, userId: session.user.id },
     include: { events: { orderBy: { createdAt: "asc" } } },
   });
   if (!report) notFound();
@@ -50,6 +53,10 @@ export default async function WelfareDetailPage({ params }: PageProps) {
             <div>
               <dt className="text-muted-foreground">Subject</dt>
               <dd className="font-medium">{payload.subjectName}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-foreground">Squad</dt>
+              <dd className="font-medium">{payload.subjectSquad}</dd>
             </div>
             <div>
               <dt className="text-muted-foreground">Concern type</dt>

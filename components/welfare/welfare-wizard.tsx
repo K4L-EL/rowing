@@ -33,6 +33,7 @@ import {
   welfarePayloadSchema,
   welfareStepSchemas,
   WELFARE_STEP_TITLES,
+  CONCERN_TYPE_LABELS,
   type WelfarePayload,
 } from "@/lib/validations/welfare";
 import {
@@ -57,21 +58,22 @@ function pick<T extends Record<string, unknown>>(obj: T, keys: (keyof T)[]): Par
 const STEP_KEYS: (keyof WelfarePayload)[][] = [
   [
     "anonymousReporter",
+    "relatedToSelf",
     "reporterName",
     "reporterRole",
     "reporterSquad",
     "reporterPhone",
     "reporterEmail",
     "subjectName",
-    "subjectAge",
+    "subjectSquad",
     "subjectRole",
   ],
   ["factualDescription", "concernType", "concernTypeOther"],
   ["whenDescription", "whereDescription", "ongoingOrOneOff"],
-  ["allegedPersons", "witnesses", "relationshipsToClub"],
+  ["allegedPersons", "relationshipsToClub", "witnesses"],
   ["impactDescription", "immediateRisk"],
   ["reportedElsewhere", "actionsSoFar"],
-  ["evidenceDescription", "previousConcernsSamePerson"],
+  ["evidenceDescription", "evidenceFiles", "previousConcernsSamePerson"],
   ["consentToShare"],
   [
     "immediateSupportNeeds",
@@ -83,13 +85,14 @@ const STEP_KEYS: (keyof WelfarePayload)[][] = [
 
 const defaultValues: WelfarePayload = {
   anonymousReporter: false,
+  relatedToSelf: false,
   reporterName: "",
   reporterRole: "",
   reporterSquad: "",
   reporterPhone: "",
   reporterEmail: "",
   subjectName: "",
-  subjectAge: "",
+  subjectSquad: "",
   subjectRole: "",
   factualDescription: "",
   concernType: "SAFEGUARDING",
@@ -105,6 +108,7 @@ const defaultValues: WelfarePayload = {
   reportedElsewhere: "",
   actionsSoFar: "",
   evidenceDescription: "",
+  evidenceFiles: [],
   previousConcernsSamePerson: "",
   consentToShare: false,
   immediateSupportNeeds: "",
@@ -129,12 +133,25 @@ export function WelfareWizard() {
   const { register, handleSubmit, watch, setValue, getValues, formState } = form;
   const immediateRisk = watch("immediateRisk");
   const anonymousReporter = watch("anonymousReporter");
+  const relatedToSelf = watch("relatedToSelf");
+  const reporterName = watch("reporterName");
+  const reporterRole = watch("reporterRole");
+  const reporterSquad = watch("reporterSquad");
 
   useEffect(() => {
     if (!immediateRisk) {
       dispatch(setRiskModalAcknowledged(false));
     }
   }, [immediateRisk, dispatch]);
+
+  /* Auto-fill subject fields when "related to myself" is ticked */
+  useEffect(() => {
+    if (relatedToSelf) {
+      setValue("subjectName", reporterName ?? "");
+      setValue("subjectSquad", reporterSquad ?? "");
+      setValue("subjectRole", reporterRole ?? "");
+    }
+  }, [relatedToSelf, reporterName, reporterRole, reporterSquad, setValue]);
 
   const totalSteps = WELFARE_STEP_TITLES.length;
   const progressPct = ((step + 1) / totalSteps) * 100;
@@ -252,27 +269,50 @@ export function WelfareWizard() {
               <Label htmlFor="reporterPhone">Telephone</Label>
               <Input id="reporterPhone" {...register("reporterPhone")} className="mt-1" />
             </div>
-            <div className="border-t border-white/40 pt-4">
-              <p className="mb-2 text-sm font-medium text-primary">Who is the concern about? (required)</p>
+            <div className="border-t border-border pt-4">
+              <p className="mb-3 text-sm font-semibold text-primary">Who is the concern about? (required)</p>
+              <div className="mb-3 flex items-center gap-2">
+                <Checkbox
+                  id="self"
+                  checked={relatedToSelf}
+                  onCheckedChange={(c) => setValue("relatedToSelf", c === true)}
+                />
+                <Label htmlFor="self">Report is related to myself</Label>
+              </div>
               <div className="grid gap-2 md:grid-cols-2">
                 <div>
                   <Label htmlFor="subjectName">Name</Label>
-                  <Input id="subjectName" {...register("subjectName")} className="mt-1" />
+                  <Input
+                    id="subjectName"
+                    {...register("subjectName")}
+                    className="mt-1"
+                    disabled={relatedToSelf}
+                  />
                   {formState.errors.subjectName && (
                     <p className="mt-1 text-sm text-destructive">{formState.errors.subjectName.message}</p>
                   )}
                 </div>
                 <div>
-                  <Label htmlFor="subjectAge">Age</Label>
-                  <Input id="subjectAge" {...register("subjectAge")} className="mt-1" />
-                  {formState.errors.subjectAge && (
-                    <p className="mt-1 text-sm text-destructive">{formState.errors.subjectAge.message}</p>
+                  <Label htmlFor="subjectSquad">Squad</Label>
+                  <Input
+                    id="subjectSquad"
+                    {...register("subjectSquad")}
+                    className="mt-1"
+                    disabled={relatedToSelf}
+                  />
+                  {formState.errors.subjectSquad && (
+                    <p className="mt-1 text-sm text-destructive">{formState.errors.subjectSquad.message}</p>
                   )}
                 </div>
               </div>
               <div className="mt-2">
                 <Label htmlFor="subjectRole">Role in club</Label>
-                <Input id="subjectRole" {...register("subjectRole")} className="mt-1" />
+                <Input
+                  id="subjectRole"
+                  {...register("subjectRole")}
+                  className="mt-1"
+                  disabled={relatedToSelf}
+                />
                 {formState.errors.subjectRole && (
                   <p className="mt-1 text-sm text-destructive">{formState.errors.subjectRole.message}</p>
                 )}
@@ -306,14 +346,14 @@ export function WelfareWizard() {
                 onValueChange={(v) => setValue("concernType", v as WelfarePayload["concernType"])}
               >
                 <SelectTrigger className="mt-1">
-                  <SelectValue />
+                  <SelectValue>{CONCERN_TYPE_LABELS[watch("concernType")]}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="SAFEGUARDING">Safeguarding (child / vulnerable adult)</SelectItem>
-                  <SelectItem value="BULLYING_HARASSMENT">Bullying / harassment</SelectItem>
-                  <SelectItem value="POOR_COACHING">Poor coaching practice</SelectItem>
-                  <SelectItem value="HEALTH_SAFETY">Health &amp; safety</SelectItem>
-                  <SelectItem value="OTHER_WELFARE">Other welfare issue</SelectItem>
+                  {Object.entries(CONCERN_TYPE_LABELS).map(([value, label]) => (
+                    <SelectItem key={value} value={value}>
+                      {label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -367,12 +407,12 @@ export function WelfareWizard() {
               <Textarea id="alleged" rows={3} {...register("allegedPersons")} className="mt-1" />
             </div>
             <div>
-              <Label htmlFor="witnesses">Witnesses</Label>
-              <Textarea id="witnesses" rows={3} {...register("witnesses")} className="mt-1" />
-            </div>
-            <div>
               <Label htmlFor="rel">Relationship to the club</Label>
               <Textarea id="rel" rows={2} {...register("relationshipsToClub")} className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="witnesses">Witnesses</Label>
+              <Textarea id="witnesses" rows={3} {...register("witnesses")} className="mt-1" />
             </div>
           </div>
         )}
@@ -422,8 +462,38 @@ export function WelfareWizard() {
         {step === 6 && (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="evidence">Evidence (messages, emails, photos, etc.)</Label>
+              <Label htmlFor="evidence">Describe evidence (messages, emails, photos, etc.)</Label>
               <Textarea id="evidence" rows={4} {...register("evidenceDescription")} className="mt-1" />
+            </div>
+            <div>
+              <Label htmlFor="evidenceFiles">Upload evidence files (optional)</Label>
+              <input
+                id="evidenceFiles"
+                type="file"
+                multiple
+                accept="image/*,.pdf,.doc,.docx,.txt,.eml,.msg"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? []).map((f) => ({
+                    name: f.name,
+                    size: f.size,
+                    type: f.type,
+                  }));
+                  setValue("evidenceFiles", files);
+                }}
+                className="clay-pressed mt-1 w-full rounded-xl border-0 bg-clay-blue-pale p-3 text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-primary-foreground"
+              />
+              {(watch("evidenceFiles") ?? []).length > 0 && (
+                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+                  {(watch("evidenceFiles") ?? []).map((f, i) => (
+                    <li key={i}>
+                      {f.name} &middot; {(f.size / 1024).toFixed(1)} KB
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p className="mt-1 text-xs text-muted-foreground">
+                Files are listed in the report. Upload to cloud storage is coming soon.
+              </p>
             </div>
             <div>
               <Label htmlFor="prev">Previous concerns about the same person?</Label>
