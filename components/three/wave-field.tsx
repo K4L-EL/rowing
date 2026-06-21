@@ -6,10 +6,10 @@ import { useRef, useMemo, useCallback, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-const COLS = 80;
-const ROWS = 30;
-const SPACING = 0.35;
-const SPHERE_SIZE = 0.085;
+const COLS = 20;
+const ROWS = 8;
+const SPACING = 1.1;
+const SPHERE_SIZE = 0.18;
 
 function WavePoints() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
@@ -59,7 +59,7 @@ function WavePoints() {
         meshRef.current.setMatrixAt(idx, dummy.matrix);
 
         const height01 = THREE.MathUtils.clamp((y + 0.3) / 0.9, 0, 1);
-        color.setStyle("#0ea5e9").lerp(new THREE.Color("#ffffff"), height01 * 0.7 + mouseWave * 0.3);
+        color.setStyle("#0d9488").lerp(new THREE.Color("#ffffff"), height01 * 0.7 + mouseWave * 0.3);
         colorArray[idx * 3] = color.r;
         colorArray[idx * 3 + 1] = color.g;
         colorArray[idx * 3 + 2] = color.b;

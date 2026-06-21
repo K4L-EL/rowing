@@ -81,7 +81,7 @@ export function createAiService(config: AiServiceConfig) {
   };
 }
 
-function fallbackSummary(p: WelfarePayload): string {
+export function fallbackSummary(p: WelfarePayload): string {
   return [
     `• Concern about: ${p.subjectName} (squad: ${p.subjectSquad}, role: ${p.subjectRole})`,
     `• Type: ${p.concernType.replace(/_/g, " ")}`,

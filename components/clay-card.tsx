@@ -7,7 +7,7 @@ type ClayCardProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 const colorMap = {
-  white: "bg-white",
+  white: "bg-card",
   blue: "bg-clay-blue",
   blueLight: "bg-clay-blue-light",
   bluePale: "bg-clay-blue-pale",

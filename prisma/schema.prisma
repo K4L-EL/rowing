@@ -8,9 +8,31 @@ datasource db {
 }
 
 enum Role {
-  USER
+  MEMBER
+  COACH
   WELFARE_OFFICER
+  COMMITTEE
   ADMIN
+}
+
+enum Squad {
+  SENIOR
+  JUNIOR
+  NOVICE
+  MASTERS
+}
+
+enum TrainingSession {
+  AM1
+  AM2
+  NOON
+  PM1
+  PM2
+}
+
+enum SessionType {
+  LAND
+  WATER
 }
 
 enum ReportStatus {
@@ -27,21 +49,46 @@ enum AvailabilityStatus {
   MAYBE
 }
 
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELLED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  passwordHash  String?
-  role          Role      @default(USER)
-  squad         String?
-  accounts      Account[]
-  sessions      Session[]
-  reports       WelfareReport[]
-  availability  AvailabilitySlot[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  name              String?
+  email             String?   @unique
+  emailVerified     DateTime?
+  image             String?
+  passwordHash      String?
+  role              Role      @default(MEMBER)
+  squad             Squad?
+  onboardingComplete Boolean  @default(false)
+  slackId           String?
+  accounts          Account[]
+  sessions          Session[]
+  reports           WelfareReport[]
+  availability      AvailabilitySlot[]
+  kitOrders         KitOrder[]
+  bookings          Booking[]
+  invoices          Invoice[]
+  notifications     Notification[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Account {
@@ -112,25 +159,122 @@ model AvailabilitySlot {
   id        String             @id @default(cuid())
   userId    String
   date      DateTime
+  session   TrainingSession
   status    AvailabilityStatus
   note      String?
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
   user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, date])
+  @@unique([userId, date, session])
   @@index([date])
 }
 
 model CrewSheet {
-  id        String   @id @default(cuid())
+  id        String      @id @default(cuid())
   name      String
   date      DateTime
-  boatType  String
-  positions Json
-  note      String?  @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  session   TrainingSession
+  type      SessionType
+  squad     Squad?
+  boatType  String?
+  positions Json?
+  blades    String[]
+  note      String?     @db.Text
+  slackTs   String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 
   @@index([date])
+}
+
+model KitItem {
+  id          String    @id @default(cuid())
+  name        String
+  price       Float
+  description String
+  color       String    @default("white")
+  badge       String?
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  orders      KitOrder[]
+}
+
+model KitOrder {
+  id        String      @id @default(cuid())
+  userId    String
+  itemId    String
+  quantity  Int         @default(1)
+  status    OrderStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item      KitItem     @relation(fields: [itemId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  date        DateTime
+  time        String
+  venue       String
+  description String
+  price       Float
+  capacity    Int?
+  inviteOnly  Boolean   @default(false)
+  menu        Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+
+  @@index([date])
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  eventId   String
+  userId    String
+  quantity  Int           @default(1)
+  status    BookingStatus @default(CONFIRMED)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  event     Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+}
+
+model Invoice {
+  id          String        @id @default(cuid())
+  userId      String
+  title       String
+  amount      Float
+  status      InvoiceStatus @default(PENDING)
+  dueDate     DateTime?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // welfare_status, booking_confirmed, invoice_issued
+  title     String
+  body      String?
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
 }

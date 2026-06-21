@@ -1,6 +1,13 @@
 import { DashboardNav } from "@/components/dashboard/dashboard-nav";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function DashboardShellLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardShellLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (session?.user?.email && !session.user.emailVerified) {
+    redirect("/verify-email-notice");
+  }
+
   return (
     <div className="flex min-h-screen">
       <DashboardNav />

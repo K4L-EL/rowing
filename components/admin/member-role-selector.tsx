@@ -11,11 +11,13 @@ import {
 } from "@/components/ui/select";
 import { updateUserRoleAction } from "@/app/actions/admin";
 
-type Role = "USER" | "WELFARE_OFFICER" | "ADMIN";
+type Role = "MEMBER" | "COACH" | "WELFARE_OFFICER" | "COMMITTEE" | "ADMIN";
 
 const LABELS: Record<Role, string> = {
-  USER: "User",
+  MEMBER: "Member",
+  COACH: "Coach",
   WELFARE_OFFICER: "Welfare officer",
+  COMMITTEE: "Committee",
   ADMIN: "Admin",
 };
 
@@ -50,7 +52,7 @@ export function MemberRoleSelector({
         <SelectValue>{LABELS[role]}</SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {(["USER", "WELFARE_OFFICER", "ADMIN"] as const).map((r) => (
+        {(["MEMBER", "COACH", "WELFARE_OFFICER", "COMMITTEE", "ADMIN"] as const).map((r) => (
           <SelectItem key={r} value={r}>
             {LABELS[r]}
           </SelectItem>

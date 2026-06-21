@@ -11,6 +11,7 @@ import { parsePayload } from "@/lib/parse-payload";
 import { reportStatusLabel } from "@/lib/welfare-status";
 import { AiSummary } from "@/components/welfare/ai-summary";
 import { welfarePayloadSchema } from "@/lib/validations/welfare";
+import { serverHasPermission } from "@/lib/permissions";
 
 type PageProps = { params: Promise<{ id: string }> };
 
@@ -20,7 +21,7 @@ export default async function WelfareDetailPage({ params }: PageProps) {
   const { id } = await params;
 
   const isPrivileged =
-    session.user.role === "ADMIN" || session.user.role === "WELFARE_OFFICER";
+    serverHasPermission(session.user.role as any, "view:all-welfare");
 
   const report = await prisma.welfareReport.findFirst({
     where: isPrivileged ? { id } : { id, userId: session.user.id },

@@ -33,7 +33,7 @@ function buildSummaryHtml(payload: WelfarePayload): string {
   return lines.join("\n");
 }
 
-function escapeHtml(s: string): string {
+export function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -55,6 +55,42 @@ export function createEmailService(config: EmailServiceConfig) {
         to: [to],
         subject: "Copy of your welfare report — Rowing Club",
         html: buildSummaryHtml(payload),
+      });
+      if (error) {
+        console.error("[email] Resend error", error);
+        return { ok: false, error: error.message };
+      }
+      return { ok: true };
+    },
+
+    async sendPasswordResetEmail(to: string, link: string): Promise<{ ok: boolean; error?: string }> {
+      if (!resend) {
+        console.warn("[email] RESEND_API_KEY not set; skipping send");
+        return { ok: false, error: "Email not configured" };
+      }
+      const { error } = await resend.emails.send({
+        from: config.from,
+        to: [to],
+        subject: "Reset your password — Rowing Club",
+        html: `<p>You requested a password reset.</p><p><a href="${escapeHtml(link)}" style="display:inline-block;padding:12px 24px;background:#0d9488;color:#fff;border-radius:12px;text-decoration:none;">Reset password</a></p><p>Or copy this link: ${escapeHtml(link)}</p><p>This link expires in 1 hour.</p>`,
+      });
+      if (error) {
+        console.error("[email] Resend error", error);
+        return { ok: false, error: error.message };
+      }
+      return { ok: true };
+    },
+
+    async sendVerificationEmail(to: string, link: string): Promise<{ ok: boolean; error?: string }> {
+      if (!resend) {
+        console.warn("[email] RESEND_API_KEY not set; skipping send");
+        return { ok: false, error: "Email not configured" };
+      }
+      const { error } = await resend.emails.send({
+        from: config.from,
+        to: [to],
+        subject: "Verify your email — Rowing Club",
+        html: `<p>Welcome to RowSafe!</p><p>Please verify your email address by clicking the link below:</p><p><a href="${escapeHtml(link)}" style="display:inline-block;padding:12px 24px;background:#0d9488;color:#fff;border-radius:12px;text-decoration:none;">Verify email</a></p><p>Or copy this link: ${escapeHtml(link)}</p><p>This link expires in 24 hours.</p>`,
       });
       if (error) {
         console.error("[email] Resend error", error);

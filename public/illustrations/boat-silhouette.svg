@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="none">
+  <path d="M20 55 L180 55 L190 65 L10 65 Z" stroke="#0d9488" stroke-width="2" fill="#ccfbf1" opacity="0.6"/>
+  <path d="M30 55 L30 40" stroke="#0d9488" stroke-width="2" opacity="0.4"/>
+  <path d="M170 55 L170 40" stroke="#0d9488" stroke-width="2" opacity="0.4"/>
+  <circle cx="100" cy="55" r="3" fill="#0d9488" opacity="0.3"/>
+  <path d="M40 35 L45 20 L50 35" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M60 35 L65 15 L70 35" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M80 35 L85 18 L90 35" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M100 35 L105 15 L110 35" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M120 35 L125 18 L130 35" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M140 35 L145 20 L150 35" stroke="#0d9488" stroke-width="1.5" fill="none" opacity="0.3"/>
+  <path d="M5 65 L195 65" stroke="#0d9488" stroke-width="1" opacity="0.2"/>
+  <path d="M5 60 L195 60" stroke="#0d9488" stroke-width="1" opacity="0.15"/>
+  <path d="M5 70 L195 70" stroke="#0d9488" stroke-width="1" opacity="0.15"/>
+</svg>

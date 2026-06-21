@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { ClayCard } from "@/components/clay-card";
 import { Heart, Lightbulb, ShieldCheck, Rocket } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "About — RowSafe",
+  description: "RowSafe is purpose-built for rowing club welfare, safeguarding, and crew management. Learn about our mission and values.",
+};
 
 const values = [
   {

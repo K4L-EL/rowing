@@ -8,6 +8,13 @@ import { ClayCard } from "@/components/clay-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { registerAction, type RegisterActionState } from "@/app/actions/register";
 
 const initial: RegisterActionState = {};
@@ -78,6 +85,23 @@ export function RegisterForm() {
           />
           {state.fieldErrors?.password?.[0] ? (
             <p className="mt-1 text-sm text-destructive">{state.fieldErrors.password[0]}</p>
+          ) : null}
+        </div>
+        <div>
+          <Label htmlFor="squad">Squad</Label>
+          <Select name="squad" required>
+            <SelectTrigger className="clay-pressed mt-1 rounded-xl border-0 bg-clay-blue-pale">
+              <SelectValue placeholder="Select your squad" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="SENIOR">Senior</SelectItem>
+              <SelectItem value="JUNIOR">Junior</SelectItem>
+              <SelectItem value="NOVICE">Novice</SelectItem>
+              <SelectItem value="MASTERS">Masters</SelectItem>
+            </SelectContent>
+          </Select>
+          {state.fieldErrors?.squad?.[0] ? (
+            <p className="mt-1 text-sm text-destructive">{state.fieldErrors.squad[0]}</p>
           ) : null}
         </div>
         {state.error ? <p className="text-sm text-destructive">{state.error}</p> : null}

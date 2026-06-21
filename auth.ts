@@ -39,6 +39,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           role: user.role as AppRole,
+          onboardingComplete: user.onboardingComplete,
+          emailVerified: user.emailVerified,
         };
       },
     }),
@@ -47,14 +49,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.sub = user.id;
-        token.role = user.role ?? "USER";
+        token.role = user.role ?? "MEMBER";
+        token.onboardingComplete = user.onboardingComplete;
+        token.emailVerified = user.emailVerified;
       }
       return token;
     },
     session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
-        session.user.role = (token.role as AppRole) ?? "USER";
+        session.user.role = (token.role as AppRole) ?? "MEMBER";
+        session.user.onboardingComplete = token.onboardingComplete as boolean | undefined;
+        session.user.emailVerified = token.emailVerified ? new Date(token.emailVerified as string) : null;
       }
       return session;
     },

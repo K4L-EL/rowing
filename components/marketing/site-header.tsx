@@ -39,7 +39,7 @@ export function SiteHeader() {
                 "clay-button rounded-xl px-4 py-2 text-sm font-medium transition-colors",
                 pathname === l.href
                   ? "bg-primary/15 text-primary"
-                  : "bg-transparent text-muted-foreground hover:bg-white hover:text-foreground",
+                  : "bg-transparent text-muted-foreground hover:bg-card hover:text-foreground",
               )}
             >
               {l.label}
@@ -70,14 +70,14 @@ export function SiteHeader() {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="clay-button rounded-xl bg-white p-2 md:hidden"
+          className="clay-button rounded-xl bg-card p-2 md:hidden"
         >
           {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </button>
       </div>
 
       {mobileOpen && (
-        <div className="clay mx-4 mb-4 flex flex-col gap-2 bg-white p-4 md:hidden">
+        <div className="clay mx-4 mb-4 flex flex-col gap-2 bg-card p-4 md:hidden">
           {links.map((l) => (
             <Link
               key={l.href}

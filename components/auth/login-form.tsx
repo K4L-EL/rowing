@@ -38,6 +38,11 @@ export function LoginForm() {
     <ClayCard className="p-8">
       <h1 className="text-2xl font-semibold tracking-tight text-foreground">Sign in</h1>
       <p className="mt-1 text-sm text-muted-foreground">Access your member portal.</p>
+      {searchParams.get("verified") === "true" && (
+        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          Email verified! Please sign in to continue.
+        </div>
+      )}
       <form onSubmit={(e) => void onSubmit(e)} className="mt-6 space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
@@ -62,6 +67,11 @@ export function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             className="clay-pressed mt-1 rounded-xl border-0 bg-clay-blue-pale"
           />
+        </div>
+        <div className="flex justify-end -mt-2">
+          <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2">
+            Forgot password?
+          </Link>
         </div>
         {error ? <p className="text-sm text-destructive">{error}</p> : null}
         <Button type="submit" className="clay-button w-full rounded-2xl" disabled={pending}>

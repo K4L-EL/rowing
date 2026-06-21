@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ClayCard } from "@/components/clay-card";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/guards/admin";
+import { requirePermission } from "@/lib/guards/permissions";
 import { MemberRoleSelector } from "@/components/admin/member-role-selector";
 
 export default async function AdminMembersPage() {
-  await requireAdmin();
+  await requirePermission("manage:roles");
 
   const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },

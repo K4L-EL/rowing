@@ -581,7 +581,7 @@ export function WelfareWizard() {
       </ClayCard>
 
       <Dialog open={emergencyOpen} onOpenChange={setEmergencyOpen}>
-        <DialogContent className="clay rounded-3xl border-0 bg-white sm:max-w-md">
+        <DialogContent className="clay rounded-3xl border-0 bg-popover sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-destructive">Immediate risk</DialogTitle>
             <DialogDescription>

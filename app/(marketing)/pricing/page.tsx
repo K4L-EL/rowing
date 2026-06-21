@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ClayCard } from "@/components/clay-card";
 import { Check, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "Pricing — RowSafe",
+  description: "Simple, transparent pricing for rowing clubs of all sizes. Free tier available with premium plans for clubs that need more.",
+};
 
 const plans = [
   {

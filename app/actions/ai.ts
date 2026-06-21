@@ -5,6 +5,8 @@ import { createAiService } from "@/lib/factories/ai-service";
 import { prisma } from "@/lib/prisma";
 import { parsePayload } from "@/lib/parse-payload";
 import { welfarePayloadSchema } from "@/lib/validations/welfare";
+import * as Sentry from "@sentry/nextjs";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const ai = createAiService({
   apiKey: process.env.AZURE_OPENAI_API_KEY ?? process.env.OPENAI_API_KEY,
@@ -23,6 +25,10 @@ export async function generateSummaryAction(
   });
   if (!report) return { ok: false, error: "Report not found" };
 
+  if (!checkRateLimit("ai:" + session.user.id, 3, 60000)) {
+    return { ok: false, error: "Too many requests. Please wait before trying again." };
+  }
+
   const parsed = welfarePayloadSchema.safeParse(parsePayload(report.payload));
   if (!parsed.success) return { ok: false, error: "Invalid report data" };
 
@@ -30,8 +36,14 @@ export async function generateSummaryAction(
     return { ok: false, error: "AI is not configured yet." };
   }
 
-  const summary = await ai.generateReportSummary(parsed.data);
-  return { ok: true, summary };
+  try {
+    const summary = await ai.generateReportSummary(parsed.data);
+    return { ok: true, summary };
+  } catch (e) {
+    console.error("[ai] generateSummaryAction failed", e);
+    Sentry.captureException(e);
+    return { ok: false, error: "AI generation failed. Please try again." };
+  }
 }
 
 export async function assistWritingAction(
@@ -42,10 +54,21 @@ export async function assistWritingAction(
   if (!session?.user?.id) return { ok: false, error: "Unauthorized" };
 
   if (!userDraft.trim()) return { ok: false, error: "Please write something first" };
+
+  if (!checkRateLimit("ai:" + session.user.id, 3, 60000)) {
+    return { ok: false, error: "Too many requests. Please wait before trying again." };
+  }
+
   if (!process.env.AZURE_OPENAI_API_KEY && !process.env.OPENAI_API_KEY) {
     return { ok: false, error: "AI is not configured yet." };
   }
 
-  const suggestion = await ai.assistWriting(fieldContext, userDraft);
-  return { ok: true, suggestion };
+  try {
+    const suggestion = await ai.assistWriting(fieldContext, userDraft);
+    return { ok: true, suggestion };
+  } catch (e) {
+    console.error("[ai] assistWritingAction failed", e);
+    Sentry.captureException(e);
+    return { ok: false, error: "AI suggestion failed. Please try again." };
+  }
 }
